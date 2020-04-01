@@ -2,8 +2,7 @@ package com.app.flickerimageview.db
 
 import androidx.room.*
 import com.app.flickerimageview.model.Photo
-import com.app.flickerimageview.utils.Constants.Companion.DELETE_TABLE
-import com.app.flickerimageview.utils.Constants.Companion.TABLE_NAME
+import com.app.flickerimageview.utils.Constants.TABLE_NAME
 
 @Dao
 interface ImageDao {
@@ -14,7 +13,7 @@ interface ImageDao {
     @Query("SELECT * FROM $TABLE_NAME")
     fun getImages(): List<Photo>
 
-    @Query(DELETE_TABLE)
+    @Query("DELETE FROM $TABLE_NAME")
     suspend fun deleteAll()
 
     @Delete

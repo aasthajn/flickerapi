@@ -4,6 +4,5 @@ data class ErrorResponse (
     val message:String?,
     val code :Int?,
     val stat:String
-
 )
 

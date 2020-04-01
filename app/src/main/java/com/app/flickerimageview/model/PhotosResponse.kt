@@ -1,6 +1,6 @@
 package com.app.flickerimageview.model
 
-data class Photos(
+data class PhotosResponse(
     val page: Int,
     val pages: Int,
     val perpage: Int,

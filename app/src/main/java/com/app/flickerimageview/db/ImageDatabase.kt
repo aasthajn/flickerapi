@@ -1,12 +1,10 @@
-package com.app.movieapp.db
+package com.app.flickerimageview.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.app.flickerimageview.db.ImageDao
 import com.app.flickerimageview.model.Photo
-import com.app.flickerimageview.model.SearchItem
 
 @Database(entities = [Photo::class], version = 1, exportSchema = false)
 abstract class ImageDatabase : RoomDatabase() {

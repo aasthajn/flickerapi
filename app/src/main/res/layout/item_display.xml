@@ -64,6 +64,8 @@
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="Spider Man , Far from Home, Endgame and More"
+            android:maxLines="3"
+            android:ellipsize="end"
             android:textColor="@color/title_text"/>
 
 

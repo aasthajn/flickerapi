@@ -3,22 +3,22 @@ package com.app.flickerimageview.utils
 import androidx.recyclerview.widget.RecyclerView
 
 import androidx.recyclerview.widget.LinearLayoutManager
-
+import com.app.flickerimageview.utils.Constants.PER_PAGE
 
 abstract class PaginationListener(private val layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
 
-    abstract val isLastPage: Boolean
-    abstract val isLoading: Boolean
+    var isLoading: Boolean = false
+    var connected: Boolean = false
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
         val visibleItemCount = layoutManager.childCount
         val totalItemCount = layoutManager.itemCount
         val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-        if (!isLoading && !isLastPage) {
+        if (!isLoading && connected) {
             if (visibleItemCount + firstVisibleItemPosition >= totalItemCount
                 && firstVisibleItemPosition >= 0
-                && totalItemCount >= PAGE_SIZE
+                && totalItemCount >= PER_PAGE
             ) {
                 loadMoreItems()
             }
@@ -26,8 +26,4 @@ abstract class PaginationListener(private val layoutManager: LinearLayoutManager
     }
 
     protected abstract fun loadMoreItems()
-
-    companion object {
-        private val PAGE_SIZE = Constants.PER_PAGE
-    }
 }

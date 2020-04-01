@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">FlickerImageView</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="error">Could not fetch results.\nPlease check internet connection or try again</string>
+    <string name="search">Search to fetch images by typing at least 1 character</string>
+    <string name="loading_more">Loading...</string>
+</resources>
