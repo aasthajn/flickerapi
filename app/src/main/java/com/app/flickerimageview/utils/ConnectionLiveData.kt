@@ -9,7 +9,7 @@ class ConnectionLiveData(context: Context) : LiveData<Boolean>() {
 
     private var connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    private fun isConnected():Boolean{
+     fun isConnected():Boolean{
         val activeNetwork = connectivityManager.activeNetworkInfo
         return activeNetwork !=null && activeNetwork.isConnected
     }

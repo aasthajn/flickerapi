@@ -4,6 +4,7 @@ import com.app.flickerimageview.model.SearchItem
 import com.app.flickerimageview.utils.Constants.API_KEY
 import com.app.flickerimageview.utils.Constants.FORMAT
 import com.app.flickerimageview.utils.Constants.METHOD
+import com.app.flickerimageview.utils.Constants.MOCK_URL
 import com.app.flickerimageview.utils.Constants.PER_PAGE
 import retrofit2.Response
 import retrofit2.http.GET
@@ -22,5 +23,7 @@ interface Webservice {
         @Query("nojsoncallback") nojsoncallback: Int = 1
     ): Response<SearchItem>
 
+    @GET(MOCK_URL)
+    suspend fun searchMock():Response<SearchItem>
 
 }

@@ -15,7 +15,6 @@ import com.app.flickerimageview.R
 import com.app.flickerimageview.utils.ConnectionLiveData
 import com.app.flickerimageview.utils.PaginationListener
 import com.app.flickerimageview.viewmodel.SearchViewModel
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment() {
@@ -46,10 +45,9 @@ class MainFragment : Fragment() {
     private fun subscribe() {
         mainViewModel.resultLiveData.observe(viewLifecycleOwner, Observer { result ->
             result?.run {
-                if (this.isNotEmpty())
+
                     displayListAdapter.list = this
             }
-            setResultSuccessText()
         })
 
         mainViewModel.errorMessage.observe(viewLifecycleOwner, Observer { error ->
@@ -58,16 +56,14 @@ class MainFragment : Fragment() {
 
         mainViewModel.isLoading.observe(viewLifecycleOwner, Observer {
             toggleTextAndProgress(it)
-            paginationListener.isLoading = it
         })
 
         ConnectionLiveData(context!!).observe(viewLifecycleOwner, Observer { status ->
-            Snackbar.make(
-                rv_search_results,
-                if (status) "You are Online" else "You are Offline",
-                Snackbar.LENGTH_LONG
-            ).show()
-            paginationListener.connected = status
+            if (!status){
+                bottom_view.visibility = View.VISIBLE
+            }else {
+                bottom_view.visibility = View.GONE
+            }
         })
     }
 
@@ -104,8 +100,6 @@ class MainFragment : Fragment() {
                 resetParams()
                 if (p0.toString().isNotEmpty()) {
                     mainViewModel.getResults(ed_search.text.toString())
-                } else {
-                    setResultSuccessText()
                 }
             }
 
@@ -120,8 +114,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setResultErrorText(error: String) {
-        if (displayListAdapter.itemCount == 0) {
-            tv_no_results.visibility = View.VISIBLE
+        if (mainViewModel.checkPhotoListEmpty()) {
             tv_no_results.text = error
         } else {
             showToast(error)
@@ -130,11 +123,6 @@ class MainFragment : Fragment() {
 
     private fun showToast(error: String) {
         Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
-    }
-
-    private fun setResultSuccessText() {
-        tv_no_results.visibility = View.GONE
-        tv_no_results.text = resources.getString(R.string.search)
     }
 
     private fun resetParams() {
