@@ -1,7 +1,6 @@
 package com.app.flickerimageview.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -10,8 +9,6 @@ import com.app.flickerimageview.model.*
 import com.app.flickerimageview.network.ErrorResponse
 import com.app.flickerimageview.network.Output
 import com.app.flickerimageview.utils.ConnectionLiveData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class SearchViewModel(val app: Application) : AndroidViewModel(app) {
@@ -38,7 +35,7 @@ class SearchViewModel(val app: Application) : AndroidViewModel(app) {
             }
 
             if (photoList.isNotEmpty()) {
-                if (ConnectionLiveData(getApplication()).isConnected()&& !isFooterShown || !isFooterShown)
+                if ((ConnectionLiveData(getApplication()).isConnected() && !isFooterShown) || !isFooterShown)
                     showLoader()
             }
 
@@ -59,7 +56,7 @@ class SearchViewModel(val app: Application) : AndroidViewModel(app) {
                                 resultLiveData.postValue(list)
                                 currentPage = resultResponse.output.photos.page
                                 totalPages = resultResponse.output.photos.pages
-                                if(totalPages==0){
+                                if (totalPages == 0) {
                                     errorMessage.postValue(app.resources.getString(R.string.no_result))
                                 }
                             }

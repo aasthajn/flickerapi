@@ -1,14 +1,12 @@
 package com.app.flickerimageview.view
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.app.flickerimageview.model.ListItem
 import com.app.flickerimageview.model.Photo
 import kotlin.collections.arrayListOf as arrayListOf1
 
-class DisplayListAdapter(
-) : RecyclerView.Adapter<BaseHolder>() {
+class DisplayListAdapter : RecyclerView.Adapter<BaseHolder>() {
 
     private var displayList: ArrayList<ListItem> = arrayListOf1()
 

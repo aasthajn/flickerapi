@@ -7,6 +7,6 @@
     <color name="title_text">#f2f2f2</color>
     <color name="header_text">#ffffff</color>
     <color name="colorBlack">#000000</color>
-    <color name="red">@color/colorPrimary</color>
+    <color name="warning">#ff5722</color>
 
 </resources>

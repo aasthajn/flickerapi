@@ -45,8 +45,8 @@ class MainFragment : Fragment() {
     private fun subscribe() {
         mainViewModel.resultLiveData.observe(viewLifecycleOwner, Observer { result ->
             result?.run {
-                    displayListAdapter.list = this
-                    toggleTextAndProgress(false)
+                displayListAdapter.list = this
+                toggleTextAndProgress(false)
             }
         })
 
@@ -55,14 +55,14 @@ class MainFragment : Fragment() {
         })
 
         mainViewModel.isLoading.observe(viewLifecycleOwner, Observer {
-            if(it)
-            toggleTextAndProgress(it)
+            if (it)
+                toggleTextAndProgress(it)
         })
 
         ConnectionLiveData(context!!).observe(viewLifecycleOwner, Observer { status ->
-            if (!status){
+            if (!status) {
                 bottom_view.visibility = View.VISIBLE
-            }else {
+            } else {
                 bottom_view.visibility = View.GONE
                 getImages()
             }
@@ -71,13 +71,13 @@ class MainFragment : Fragment() {
 
     private fun toggleTextAndProgress(isLoading: Boolean) {
         if (isLoading) {
-            if(mainViewModel.checkPhotoListEmpty())
-             progress_circular.visibility = View.VISIBLE
+            if (mainViewModel.checkPhotoListEmpty())
+                progress_circular.visibility = View.VISIBLE
             tv_no_results.visibility = View.GONE
         } else {
             progress_circular.visibility = View.GONE
-            if(mainViewModel.checkPhotoListEmpty())
-            tv_no_results.visibility = View.VISIBLE
+            if (mainViewModel.checkPhotoListEmpty())
+                tv_no_results.visibility = View.VISIBLE
         }
 
     }

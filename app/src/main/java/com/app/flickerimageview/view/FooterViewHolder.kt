@@ -1,6 +1,5 @@
 package com.app.flickerimageview.view
 
-import android.util.Log
 import android.view.ViewGroup
 import com.app.flickerimageview.R
 import com.app.flickerimageview.model.ListItem

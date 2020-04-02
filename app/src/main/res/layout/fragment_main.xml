@@ -10,8 +10,6 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="10dp"
-        app:layout_collapseMode="parallax"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -19,7 +17,7 @@
             android:id="@+id/ed_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/red"
+            android:background="@color/colorPrimary"
             android:drawableStart="@drawable/ic_search_black_24dp"
             android:drawablePadding="10dp"
             android:fontFamily="@font/asul"
@@ -28,6 +26,9 @@
             android:textColor="@color/surface_text_small"
             android:textColorHint="@color/surface_text_small"
             android:textSize="25sp"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.cardview.widget.CardView>
@@ -51,7 +52,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="10dp"
         app:layout_anchorGravity="bottom|end"
         app:layout_constraintTop_toBottomOf="@id/card_view"
         tools:visibility="gone" />
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/asul"
             android:text="@string/offline_status"
-            android:textColor="@color/surface_text_small"
+            android:textColor="@color/warning"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/bottom_view"
             app:layout_constraintStart_toStartOf="parent"
