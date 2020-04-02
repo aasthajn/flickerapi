@@ -1,11 +1,13 @@
 package com.app.flickerimageview.network
 
+import android.app.Application
+import com.app.flickerimageview.R
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import retrofit2.Response
 import java.io.IOException
 
-open class BaseRepository {
+open class BaseRepository(val application: Application) {
 
     suspend fun <T : Any> enqueue(call: suspend () -> Response<T>): Output<T> {
         return apiOutput(call)
@@ -26,12 +28,12 @@ open class BaseRepository {
             return when (t) {
                 is IOException -> Output.Error(
                     ErrorResponse(
-                        "Could not fetch results.Please check internet connection or try again",
+                        application.resources.getString(R.string.error_internet),
                         100,
-                        "Fail"
+                        application.resources.getString(R.string.fail)
                     )
                 )
-                else -> Output.Error(ErrorResponse("something went wrong", 100,"Fail"))
+                else -> Output.Error(ErrorResponse(application.resources.getString(R.string.something_wrong), 100, application.resources.getString(R.string.fail)))
             }
         }
     }

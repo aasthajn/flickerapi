@@ -4,6 +4,8 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.app.flickerimageview.R
 import com.app.flickerimageview.model.*
 import com.app.flickerimageview.network.ErrorResponse
 import com.app.flickerimageview.network.Output
@@ -12,17 +14,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class SearchViewModel(application: Application) : AndroidViewModel(application) {
+class SearchViewModel(val app: Application) : AndroidViewModel(app) {
 
     val resultLiveData = MutableLiveData<ArrayList<ListItem>>()
-    private val imageRepository: ImageRepository = ImageRepository(application)
+    private val imageRepository: ImageRepository = ImageRepository(app)
     val isLoading = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<String>()
-    private lateinit var loaderText: String
     private var currentPage = 0
     private var totalPages = 0
     private var photoList = arrayListOf<Photo>()
     private var loadingInProgress = false
+    private var isFooterShown = false
 
     init {
         reset()
@@ -31,19 +33,23 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     fun getResults(searchText: String) {
         if (!loadingInProgress) {
             if (searchText.isEmpty()) {
-                errorMessage.postValue("Enter at least 1 character")
+                errorMessage.postValue(app.resources.getString(R.string.search))
                 return
             }
+
             if (photoList.isNotEmpty()) {
-                showLoader()
+                if (ConnectionLiveData(getApplication()).isConnected()&& !isFooterShown || !isFooterShown)
+                    showLoader()
             }
+
             isLoading.postValue(true)
             loadingInProgress = true
-            GlobalScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 val resultResponse = imageRepository.getResults(searchText, currentPage + 1)
                 isLoading.postValue(false)
                 loadingInProgress = false
                 if (resultResponse is Output.Success) {
+                    isFooterShown = false
                     if (resultResponse.output is SearchItem) {
                         if (resultResponse.output.stat == "ok") {
                             resultResponse.output.photos?.photo?.let {
@@ -53,6 +59,9 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
                                 resultLiveData.postValue(list)
                                 currentPage = resultResponse.output.photos.page
                                 totalPages = resultResponse.output.photos.pages
+                                if(totalPages==0){
+                                    errorMessage.postValue(app.resources.getString(R.string.no_result))
+                                }
                             }
                         } else {
                             errorMessage.postValue(resultResponse.output.message)
@@ -70,13 +79,14 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private fun showLoader() {
+        isFooterShown = true
         val list = resultLiveData.value
-        list?.add(PageLoader(loaderText))
+        list?.add(PageLoader(app.resources.getString(R.string.loading_more)))
         resultLiveData.postValue(list)
     }
 
     fun isValidPageRequest(): Boolean {
-        return currentPage < totalPages && totalPages>0
+        return currentPage < totalPages && totalPages > 0
     }
 
     fun reset() {
@@ -84,8 +94,8 @@ class SearchViewModel(application: Application) : AndroidViewModel(application) 
         resultLiveData.postValue(photoList as ArrayList<ListItem>)
         currentPage = 0
         totalPages = Int.MAX_VALUE
-        loaderText = "Loading"
         loadingInProgress = false
+        isFooterShown = false
     }
 
 }

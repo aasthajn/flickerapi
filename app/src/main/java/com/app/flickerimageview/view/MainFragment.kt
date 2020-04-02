@@ -45,8 +45,8 @@ class MainFragment : Fragment() {
     private fun subscribe() {
         mainViewModel.resultLiveData.observe(viewLifecycleOwner, Observer { result ->
             result?.run {
-
                     displayListAdapter.list = this
+                    toggleTextAndProgress(false)
             }
         })
 
@@ -55,6 +55,7 @@ class MainFragment : Fragment() {
         })
 
         mainViewModel.isLoading.observe(viewLifecycleOwner, Observer {
+            if(it)
             toggleTextAndProgress(it)
         })
 
@@ -63,19 +64,20 @@ class MainFragment : Fragment() {
                 bottom_view.visibility = View.VISIBLE
             }else {
                 bottom_view.visibility = View.GONE
+                getImages()
             }
         })
     }
 
     private fun toggleTextAndProgress(isLoading: Boolean) {
         if (isLoading) {
-            if(displayListAdapter.list.isEmpty())
-               progress_circular.visibility = View.VISIBLE
+            if(mainViewModel.checkPhotoListEmpty())
+             progress_circular.visibility = View.VISIBLE
             tv_no_results.visibility = View.GONE
         } else {
             progress_circular.visibility = View.GONE
-            if(displayListAdapter.list.isEmpty())
-              tv_no_results.visibility = View.VISIBLE
+            if(mainViewModel.checkPhotoListEmpty())
+            tv_no_results.visibility = View.VISIBLE
         }
 
     }
@@ -83,9 +85,7 @@ class MainFragment : Fragment() {
     private fun bindView() {
         paginationListener = object : PaginationListener(linearLayoutManager) {
             override fun loadMoreItems() {
-                if (mainViewModel.isValidPageRequest()) {
-                    mainViewModel.getResults(ed_search.text.toString())
-                }
+                getImages()
             }
         }
 
@@ -98,9 +98,7 @@ class MainFragment : Fragment() {
         ed_search.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 resetParams()
-                if (p0.toString().isNotEmpty()) {
-                    mainViewModel.getResults(ed_search.text.toString())
-                }
+                getImages()
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -113,7 +111,14 @@ class MainFragment : Fragment() {
         })
     }
 
+    private fun getImages() {
+        if (mainViewModel.isValidPageRequest()) {
+            mainViewModel.getResults(ed_search.text.toString().trim())
+        }
+    }
+
     private fun setResultErrorText(error: String) {
+        toggleTextAndProgress(false)
         if (mainViewModel.checkPhotoListEmpty()) {
             tv_no_results.text = error
         } else {
