@@ -6,9 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.app.flickerimageview.R
 import com.app.flickerimageview.model.*
-import com.app.flickerimageview.network.ErrorResponse
 import com.app.flickerimageview.network.Output
-import com.app.flickerimageview.utils.ConnectionLiveData
 import kotlinx.coroutines.launch
 
 class SearchViewModel(val app: Application) : AndroidViewModel(app) {
@@ -34,9 +32,8 @@ class SearchViewModel(val app: Application) : AndroidViewModel(app) {
                 return
             }
 
-            if (photoList.isNotEmpty()) {
-                if ((ConnectionLiveData(getApplication()).isConnected() && !isFooterShown) || !isFooterShown)
-                    showLoader()
+            if (photoList.isNotEmpty() && !isFooterShown) {
+                showLoader()
             }
 
             isLoading.postValue(true)
@@ -61,11 +58,17 @@ class SearchViewModel(val app: Application) : AndroidViewModel(app) {
                                 }
                             }
                         } else {
-                            errorMessage.postValue(resultResponse.output.message)
+                            errorMessage.postValue(
+                                resultResponse.output.message
+                                    ?: app.resources.getString(R.string.something_wrong)
+                            )
                         }
                     }
                 } else if (resultResponse is Output.Error) {
-                    errorMessage.postValue((resultResponse.errorMessage as ErrorResponse).message)
+                    errorMessage.postValue(
+                        resultResponse.errorMessage?.message
+                            ?: app.resources.getString(R.string.something_wrong)
+                    )
                 }
             }
         }

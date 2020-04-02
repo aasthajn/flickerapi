@@ -9,6 +9,6 @@
     <string name="offline_status">You are offline</string>
     <string name="search_hint">Search</string>
     <string name="fail">Fail</string>
-    <string name="something_wrong"></string>
+    <string name="something_wrong">Something went wrong!</string>
 
 </resources>
